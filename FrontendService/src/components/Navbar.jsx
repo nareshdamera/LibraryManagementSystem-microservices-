@@ -26,7 +26,7 @@ const Navbar = () => {
                         <>
                             <NavLink to="/dashboard" current={location.pathname}>Dashboard</NavLink>
                             <div className="flex items-center gap-4 pl-4 border-l border-white/10">
-                                <span className="text-sm font-medium text-white font-heading">{user.username}</span>
+                                <span className="text-sm font-medium text-white font-heading">{user.name}</span>
                                 <button onClick={logout} className="p-2 hover:bg-white/10 rounded-full transition-colors text-accent hover:text-accent/80">
                                     <SignOut size={20} weight="bold" />
                                 </button>

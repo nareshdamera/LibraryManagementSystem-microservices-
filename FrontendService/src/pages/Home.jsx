@@ -17,7 +17,7 @@ const Home = () => {
         if (!user) return navigate('/login');
         try {
             await borrowApi.borrowBook(bookId, user.username);
-            alert('Book borrowed successfully!');
+            alert('Book request submitted! waiting for admin approval.');
             const res = await bookApi.getAllBooks();
             setBooks(res.data);
         } catch (error) {
@@ -78,8 +78,8 @@ const Home = () => {
                             {/* Status Badge */}
                             <div className="absolute top-4 right-4">
                                 <span className={`px-3 py-1 rounded-full text-xs font-bold font-heading uppercase tracking-wider backdrop-blur-md border ${book.status === 'AVAILABLE'
-                                        ? 'bg-green-500/10 border-green-500/20 text-green-400 shadow-[0_0_10px_rgba(74,222,128,0.2)]'
-                                        : 'bg-red-500/10 border-red-500/20 text-red-400'
+                                    ? 'bg-green-500/10 border-green-500/20 text-green-400 shadow-[0_0_10px_rgba(74,222,128,0.2)]'
+                                    : 'bg-red-500/10 border-red-500/20 text-red-400'
                                     }`}>
                                     {book.status}
                                 </span>
@@ -100,11 +100,11 @@ const Home = () => {
                                 onClick={() => handleBorrow(book.id)}
                                 disabled={book.status !== 'AVAILABLE'}
                                 className={`w-full py-3 rounded-xl font-bold transition-all duration-300 ${book.status === 'AVAILABLE'
-                                        ? 'bg-white text-black hover:bg-slate-200 hover:scale-[1.02] shadow-lg shadow-white/10'
-                                        : 'bg-white/5 text-white/20 cursor-not-allowed border border-white/5'
+                                    ? 'bg-white text-black hover:bg-slate-200 hover:scale-[1.02] shadow-lg shadow-white/10'
+                                    : 'bg-white/5 text-white/20 cursor-not-allowed border border-white/5'
                                     }`}
                             >
-                                {book.status === 'AVAILABLE' ? 'Borrow Book' : 'Unavailable'}
+                                {book.status === 'AVAILABLE' ? 'Request Book' : 'Unavailable'}
                             </button>
                         </div>
                     </motion.div>

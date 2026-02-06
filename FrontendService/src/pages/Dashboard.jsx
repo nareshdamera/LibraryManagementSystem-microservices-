@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
     const [borrowings, setBorrowings] = useState([]);
+    const [pendingRequests, setPendingRequests] = useState([]);
     const { user } = useAuth();
     const navigate = useNavigate();
 
@@ -14,8 +15,24 @@ const Dashboard = () => {
             borrowApi.getMyBorrowings(user.username)
                 .then(res => setBorrowings(res.data))
                 .catch(console.error);
+
+            if (user.role === 'ADMIN') {
+                borrowApi.getPendingRequests()
+                    .then(res => setPendingRequests(res.data))
+                    .catch(console.error);
+            }
         }
     }, [user]);
+
+    const handleApprove = async (borrowId) => {
+        try {
+            await borrowApi.approveBorrow(borrowId);
+            setPendingRequests(prev => prev.filter(req => req.id !== borrowId));
+            alert("Request approved!");
+        } catch (error) {
+            console.error("Approval failed", error);
+        }
+    };
 
     const handleReturn = async (borrowId) => {
         try {
@@ -38,12 +55,46 @@ const Dashboard = () => {
                 {user && user.role === 'ADMIN' && (
                     <button
                         onClick={() => navigate('/add-book')}
-                        className="bg-primary hover:bg-primary-hover text-white font-bold py-2 px-6 rounded-xl transition-all shadow-lg shadow-primary/25"
+                        className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-6 rounded-xl transition-all shadow-lg shadow-emerald-500/25"
                     >
                         + Add Book
                     </button>
                 )}
             </div>
+
+            {user && user.role === 'ADMIN' && pendingRequests.length > 0 && (
+                <div className="mb-12">
+                    <h2 className="text-2xl font-bold font-heading mb-4 text-white">Pending Requests</h2>
+                    <div className="space-y-4">
+                        {pendingRequests.map((req, index) => (
+                            <motion.div
+                                key={req.id}
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: index * 0.05 }}
+                                className="glass-card p-6 rounded-2xl flex flex-col md:flex-row items-center justify-between border-l-4 border-l-yellow-500"
+                            >
+                                <div className="flex items-center gap-6">
+                                    <div className="w-12 h-12 rounded-full bg-yellow-500/20 text-yellow-500 flex items-center justify-center text-xl">
+                                        ⏳
+                                    </div>
+                                    <div>
+                                        <h3 className="text-sm text-slate-400 font-medium">Request #{req.id}</h3>
+                                        <p className="text-lg font-bold text-white">Book ID: {req.bookId}</p>
+                                        <p className="text-xs text-slate-500">User: {req.userId}</p>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={() => handleApprove(req.id)}
+                                    className="px-6 py-2 rounded-lg bg-primary hover:bg-primary-hover text-white font-bold transition-all shadow-lg shadow-primary/20"
+                                >
+                                    Approve
+                                </button>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            )}
 
             <div className="space-y-4">
                 {borrowings.map((record, index) => (
@@ -69,7 +120,9 @@ const Dashboard = () => {
                         <div className="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end">
                             <span className={`px-3 py-1 rounded-lg text-xs font-bold border ${record.status === 'BORROWED'
                                 ? 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400'
-                                : 'bg-white/5 border-white/5 text-slate-400'
+                                : record.status === 'PENDING'
+                                    ? 'bg-blue-500/10 border-blue-500/20 text-blue-400'
+                                    : 'bg-white/5 border-white/5 text-slate-400'
                                 }`}>
                                 {record.status}
                             </span>
@@ -86,7 +139,14 @@ const Dashboard = () => {
                     </motion.div>
                 ))}
 
-                {borrowings.length === 0 && (
+                {user.role === 'ADMIN' && pendingRequests.length === 0 && (
+                    <div className="text-center py-20 border border-dashed border-white/10 rounded-2xl mb-8">
+                        <span className="text-6xl grayscale opacity-50 block mb-4">💤</span>
+                        <p className="text-slate-500">No requests received yet.</p>
+                    </div>
+                )}
+
+                {user.role !== 'ADMIN' && borrowings.length === 0 && (
                     <div className="text-center py-20 border border-dashed border-white/10 rounded-2xl">
                         <span className="text-6xl grayscale opacity-50 block mb-4">📚</span>
                         <p className="text-slate-500">You haven't borrowed any books yet.</p>
