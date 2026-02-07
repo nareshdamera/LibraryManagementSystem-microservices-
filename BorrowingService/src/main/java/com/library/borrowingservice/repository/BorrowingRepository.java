@@ -12,4 +12,6 @@ public interface BorrowingRepository extends JpaRepository<BorrowingRecord, Long
     List<BorrowingRecord> findByUserId(String userId);
 
     List<BorrowingRecord> findByBookIdAndStatus(Long bookId, String status);
+
+    List<BorrowingRecord> findByStatus(String status);
 }

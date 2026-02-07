@@ -25,6 +25,9 @@ const Navbar = () => {
                     {user ? (
                         <>
                             <NavLink to="/dashboard" current={location.pathname}>Dashboard</NavLink>
+                            {user.role === 'ADMIN' && (
+                                <NavLink to="/history" current={location.pathname}>History</NavLink>
+                            )}
                             <div className="flex items-center gap-4 pl-4 border-l border-white/10">
                                 <span className="text-sm font-medium text-white font-heading">{user.name}</span>
                                 <button onClick={logout} className="p-2 hover:bg-white/10 rounded-full transition-colors text-accent hover:text-accent/80">

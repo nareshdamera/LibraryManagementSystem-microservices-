@@ -5,6 +5,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import AddBook from './pages/AddBook';
+import BookDetails from './pages/BookDetails';
+import History from './pages/History';
 import { AuthProvider } from './context/AuthContext';
 
 function App() {
@@ -19,6 +21,8 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/add-book" element={<AddBook />} />
+            <Route path="/book/:id" element={<BookDetails />} />
+            <Route path="/history" element={<History />} />
           </Routes>
         </div>
       </AuthProvider>

@@ -32,4 +32,22 @@ public class BorrowingController {
     public ResponseEntity<List<BorrowingRecord>> getMyBorrowings(@RequestParam String userId) {
         return ResponseEntity.ok(borrowingService.getMyBorrowings(userId));
     }
+
+    // GET /borrowings/requests
+    @GetMapping("/requests")
+    public ResponseEntity<List<BorrowingRecord>> getPendingRequests() {
+        return ResponseEntity.ok(borrowingService.getPendingRequests());
+    }
+
+    // PUT /borrowings/{borrowId}/approve
+    @PutMapping("/{borrowId}/approve")
+    public ResponseEntity<BorrowingRecord> approveBorrow(@PathVariable Long borrowId) {
+        return ResponseEntity.ok(borrowingService.approveBorrow(borrowId));
+    }
+
+    // GET /borrowings/all
+    @GetMapping("/all")
+    public ResponseEntity<List<BorrowingRecord>> getAllBorrowings() {
+        return ResponseEntity.ok(borrowingService.getAllBorrowings());
+    }
 }

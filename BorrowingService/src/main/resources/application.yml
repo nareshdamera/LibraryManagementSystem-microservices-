@@ -5,12 +5,11 @@ spring:
   application:
     name: borrowing-service
   datasource:
-    url: jdbc:h2:mem:borrowingdb
-    driverClassName: org.h2.Driver
-    username: sa
-    password: password
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
     show-sql: true

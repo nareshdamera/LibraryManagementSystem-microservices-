@@ -27,5 +27,6 @@ export const borrowApi = {
     returnBook: (borrowId) => axios.post(`${BORROW_URL}/return/${borrowId}`),
     getMyBorrowings: (userId) => axios.get(`${BORROW_URL}/my`, { params: { userId } }),
     getPendingRequests: () => axios.get(`${BORROW_URL}/requests`),
+    getAllBorrowings: () => axios.get(`${BORROW_URL}/all`),
     approveBorrow: (borrowId) => axios.put(`${BORROW_URL}/${borrowId}/approve`)
 };
